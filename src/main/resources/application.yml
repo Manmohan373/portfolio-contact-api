@@ -1,0 +1,41 @@
+server:
+  port: ${PORT:8080}
+  forward-headers-strategy: native      # real client IP behind Render/Railway/Nginx proxies
+  shutdown: graceful
+
+spring:
+  application:
+    name: portfolio-contact-api
+  mail:
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+      mail.smtp.connectiontimeout: 5000
+      mail.smtp.timeout: 8000
+      mail.smtp.writetimeout: 8000
+
+app:
+  contact:
+    to: ${CONTACT_TO:pattnaikmanmohan373@gmail.com}   # where messages are delivered
+    from: ${CONTACT_FROM:${MAIL_USERNAME:}}           # Gmail forces this to be the authenticated account
+  cors:
+    allowed-origins: ${ALLOWED_ORIGINS:https://manmohan373.github.io,http://localhost:5501,http://127.0.0.1:5501}
+  rate-limit:
+    max-requests: ${RATE_LIMIT_MAX:5}
+    window-minutes: ${RATE_LIMIT_WINDOW_MINUTES:10}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
+  health:
+    mail:
+      enabled: false     # don't make /actuator/health depend on SMTP being reachable
